@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "ensemblapi"
+version = "0.1.0"
+description = ""
+authors = ["Tony Okeke <tonykabilanokeke@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+uvicorn = "^0.23.1"
+fastapi = "^0.100.0"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.7.0"
+pytest = "^7.4.0"
+pytest-black = "^0.3.12"
+jupyter = "^1.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
