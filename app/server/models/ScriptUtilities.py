@@ -27,6 +27,12 @@ class EnumerateSecondRequest(BaseModel):
     run_directory: str
 
 
+class CleanRunDirParams(BaseModel):
+    """Parameters for clean run directory"""
+
+    run_directory: str
+
+
 class AppendToFileResponse(BaseModel):
     """Response for append to file"""
 
