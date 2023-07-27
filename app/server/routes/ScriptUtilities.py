@@ -109,7 +109,8 @@ async def run_enumerate_first(
 
 @router.get(
     "/enumerate_second",
-    response_description="Run enumerate"
+    response_description="Run enumerate",
+    response_class=PlainTextResponse,
 )
 async def run_enumerate_second(
     run_name: str = Query(
@@ -134,20 +135,29 @@ async def run_enumerate_second(
         return PlainTextResponse(f"Error reading file: {exc}", status_code=400)
 
 
-@router.get("/clean", response_description="Run clean run directory")
+@router.get(
+    "/clean",
+    response_description="Run clean run directory",
+    response_class=PlainTextResponse,
+)
 async def run_clean_run_directory(
-    run_directory: str = Query(..., alias="RunDirectory")
+    run_name: str = Query(
+        ..., alias="RunDirectory", description="Run directory"
+    )
 ):
     """Run clean run directory"""
-    try:
-        # TODO: Run clean run directory here
-        # Use run_directory in the model
 
-        return {"message": "Run clean run directory successfully"}
-    except Exception as exc:
-        raise HTTPException(
-            status_code=400, detail="Error occurred in running clean run directory"
-        ) from exc
+    # create run directory
+    run_directory = utils.create_run_dir(run_name)
+
+    try:
+        success = utils.remove_dir(run_directory)
+        if success:
+            return "Run directory removed successfully"
+    except Exception as exc:  # pylint: disable=broad-except
+        return PlainTextResponse(f"Error removing run directory: {exc}", status_code=400)
+
+    return PlainTextResponse("Error removing run directory", status_code=400)
 
 
 @router.get("/appendToFile", response_description="Run append to file")
