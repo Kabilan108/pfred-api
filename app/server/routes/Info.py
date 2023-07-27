@@ -3,9 +3,9 @@
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import PlainTextResponse
 
 from .. import __version__
-from ..models.Info import VersionResponse
 
 router = APIRouter()
 
@@ -13,12 +13,12 @@ router = APIRouter()
 @router.get(
     "/Version",
     response_description="Fetch service version",
-    response_model=VersionResponse,
+    response_class=PlainTextResponse
 )
 async def get_version() -> Any:
     """Fetch service version"""
     try:
-        return {"version": __version__}
+        return __version__
 
     except Exception as exc:
         raise HTTPException(
