@@ -107,18 +107,31 @@ async def run_enumerate_first(
         return PlainTextResponse("Enumeration.sh run failed", status_code=400)
 
 
-@router.get("/enumerate_second", response_description="Run enumerate")
-async def run_enumerate_second(run_directory: str = Query(..., alias="RunDirectory")):
-    """Run enumerate"""
-    try:
-        # TODO: Run enumerate here
-        # Use run_directory in the model
+@router.get(
+    "/enumerate_second",
+    response_description="Run enumerate"
+)
+async def run_enumerate_second(
+    run_name: str = Query(
+        ..., alias="RunDirectory", description="Run directory"
+    )
+):
+    """Collect data from sequence.fa after running Enumeration.sh"""
 
-        return {"message": "Run enumerate successfully"}
-    except Exception as exc:
-        raise HTTPException(
-            status_code=400, detail="Error occurred in running enumerate"
-        ) from exc
+    # create run directory
+    run_directory = utils.create_run_dir(run_name)
+
+    # define path to sequence file
+    seqfile = os.path.join(run_directory, "sequence.fa")
+
+    try:
+        if os.path.getsize(seqfile) == 0:
+            return PlainTextResponse("Sequence file is empty. Run /enumerate_first first.", status_code=400)
+        else:
+            result = utils.read_file(seqfile)
+            return result
+    except Exception as exc:  # pylint: disable=broad-except
+        return PlainTextResponse(f"Error reading file: {exc}", status_code=400)
 
 
 @router.get("/clean", response_description="Run clean run directory")
