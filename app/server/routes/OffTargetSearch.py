@@ -111,21 +111,22 @@ async def run_aso_search(
     return PlainTextResponse("ASOOffTargetSearch.sh run failed", status_code=400)
 
 
-@router.get("/Check", response_description="Run Check file existence")
+@router.get(
+    "/Check",
+    response_description="Run Check file existence",
+    response_class=PlainTextResponse
+)
 async def check_file(
-    file: str = Query(..., alias="File"),
-    run_directory: str = Query(..., alias="RunDirectory"),
+    file: str = Query(..., alias="File", description="File"),
+    run_name: str = Query(..., alias="RunDirectory", description="Run directory"),
 ):
-    """Run Check file existence"""
+    """Check if file exists in run directory"""
+
+    # create run directory
+    run_directory = utils.create_run_dir(run_name)
+
     try:
-        # TODO: Run the Check file existence here
-        # Use file and run_directory in the model
-
-        return {"message": "Run Check file existence successfully"}
-    except Exception as exc:
-        raise HTTPException(
-            status_code=400, detail="Error occurred in running Check file existence"
-        ) from exc
-
-
-
+        result = utils.read_file(os.path.join(run_directory, file))
+        return result
+    except Exception as exc:  # pylint: disable=broad-except
+        return PlainTextResponse(f"Error reading file: {exc}", status_code=400)
