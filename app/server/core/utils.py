@@ -37,3 +37,19 @@ def run_shell(command: str, directory: str) -> bool:
         return False
 
     return True
+
+
+# public static String readFileAsString(String filePath) throws java.io.IOException 
+def read_file(filepath: str) -> str:
+    """Read a file and return contents as a string"""
+
+    logger.warning("Reading file: %s", filepath)
+
+    try:
+        with open(filepath, "r", encoding="utf-8") as file:
+            return file.read()
+    except IOError as exc:
+        logger.error("Error reading file: %s", exc)
+        return ""
+
+
