@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, Query
 from fastapi.responses import PlainTextResponse
 
 import os
@@ -25,7 +25,7 @@ logger = utils.get_logger()
 @router.get(
     "/Orthologs",
     response_description="Run get Orthologs",
-    response_class=PlainTextResponse,
+    response_class=PlainTextResponse
 )
 async def get_orthologs(
     ensembl_id: str = Query(
@@ -67,7 +67,8 @@ async def get_orthologs(
 
 @router.get(
     "/enumerate_first",
-    response_description="Run enumerate"
+    response_description="Run enumerate",
+    response_class=PlainTextResponse
 )
 async def run_enumerate_first(
     secondary_transcript_ids: str = Query(
@@ -110,7 +111,7 @@ async def run_enumerate_first(
 @router.get(
     "/enumerate_second",
     response_description="Run enumerate",
-    response_class=PlainTextResponse,
+    response_class=PlainTextResponse
 )
 async def run_enumerate_second(
     run_name: str = Query(
@@ -138,14 +139,14 @@ async def run_enumerate_second(
 @router.get(
     "/clean",
     response_description="Run clean run directory",
-    response_class=PlainTextResponse,
+    response_class=PlainTextResponse
 )
 async def run_clean_run_directory(
     run_name: str = Query(
         ..., alias="RunDirectory", description="Run directory"
     )
 ):
-    """Run clean run directory"""
+    """Delete a run directory"""
 
     # create run directory
     run_directory = utils.create_run_dir(run_name)
@@ -160,19 +161,33 @@ async def run_clean_run_directory(
     return PlainTextResponse("Error removing run directory", status_code=400)
 
 
-@router.get("/appendToFile", response_description="Run append to file")
+@router.get(
+    "/appendToFile",
+    response_description="Run append to file",
+    response_class=PlainTextResponse
+)
 async def run_append_to_file(
-    filename: str = Query(..., alias="FileName"),
-    text: str = Query(..., alias="Text"),
-    run_directory: str = Query(..., alias="RunDirectory"),
+    filename: str = Query(
+        ..., alias="FileName", description="File name"
+    ),
+    text: str = Query(
+        ..., alias="Text", description="Text to append"
+    ),
+    run_name: str = Query(
+        ..., alias="RunDirectory", description="Run directory"
+    ),
 ):
-    """Run append to file"""
-    try:
-        # TODO: Run append to file here
-        # Use filename, text, and run_directory in the model
+    """Append to file"""
 
-        return {"message": "Run append to file successfully"}
-    except Exception as exc:
-        raise HTTPException(
-            status_code=400, detail="Error occurred in running append to file"
-        ) from exc
+    # create run directory
+    run_directory = utils.create_run_dir(run_name)
+
+    # define path to file
+    filepath = os.path.join(run_directory, filename)
+
+    try:
+        with open(filepath, "a", encoding="utf-8") as file:
+            file.write(text)
+        return "OK"
+    except Exception as exc:  # pylint: disable=broad-except
+        return PlainTextResponse(f"Error appending to file: {exc}", status_code=400)
