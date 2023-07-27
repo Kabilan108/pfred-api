@@ -53,7 +53,7 @@ async def get_orthologs(
 
         if success:
             logger.info("getOrthologs.sh ran successfully")
-            output = os.path.join(run_directory, "seq_annotations.csv")
+            output = os.path.join(run_directory, "seq_annotation.csv")
 
             try:
                 result = utils.read_file(output)
