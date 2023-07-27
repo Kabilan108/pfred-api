@@ -13,6 +13,7 @@ router = APIRouter()
 logger = utils.get_logger()
 
 
+# TODO: Run getOrthologs as a background task
 @router.get(
     "/Orthologs",
     response_description="Run get Orthologs",
@@ -52,6 +53,7 @@ async def get_orthologs(
         return PlainTextResponse("getOrthologs.sh run failed", status_code=400)
 
 
+# TODO: Run Enumeration as a background task
 @router.get(
     "/enumerate_first",
     response_description="Run enumerate",
