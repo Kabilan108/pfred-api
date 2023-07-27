@@ -13,6 +13,7 @@ router = APIRouter()
 logger = utils.get_logger()
 
 
+# TODO: Run siRNA activity model as a background task
 @router.post(
     "/siRNA",
     responses={
@@ -61,6 +62,7 @@ async def run_sirna_activity_model(
     return PlainTextResponse("getSeqGivenTrans.sh run failed", status_code=400)
 
 
+# TODO: Run ASO as a background task
 @router.post(
     "/ASO",
     responses={
