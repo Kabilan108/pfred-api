@@ -113,7 +113,7 @@ async def run_aso_search(
 async def check_file(
     file: str = Query(..., alias="File", description="File"),
     run_name: str = Query(..., alias="RunDirectory", description="Run directory"),
-):
+) -> Any:
     """Check if file exists in run directory"""
 
     # create run directory
