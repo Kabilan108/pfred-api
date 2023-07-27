@@ -16,7 +16,7 @@ logger = utils.get_logger()
 @router.get(
     "/Version",
     response_description="Fetch service version",
-    response_class=PlainTextResponse
+    response_class=PlainTextResponse,
 )
 async def get_version() -> Any:
     """Fetch service version"""
