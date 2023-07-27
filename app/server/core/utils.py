@@ -18,6 +18,8 @@ SCRIPTS_DIR = Path(os.getenv("SCRIPTS_DIR", "/scripts"))
 def get_logger() -> logging.Logger:
     """Get logger"""
     return logging.getLogger("pfred")
+
+
 logger = logging.getLogger("pfred")
 
 
@@ -36,7 +38,7 @@ def run_shell(command: str, directory: str) -> bool:
     return True
 
 
-# public static String readFileAsString(String filePath) throws java.io.IOException 
+# public static String readFileAsString(String filePath) throws java.io.IOException
 def read_file(filepath: str) -> str:
     """Read a file and return contents as a string"""
 
@@ -102,6 +104,7 @@ def remove_dir(dir_path: str) -> bool:
         return False
 
     return True
+
 
 # public static String getRunDir()
 def get_runs_dir() -> str:
