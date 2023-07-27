@@ -6,7 +6,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import PlainTextResponse
 
 from .. import __version__
-from ..core import utils
+from .. import utils
 
 
 router = APIRouter()

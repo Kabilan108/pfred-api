@@ -6,7 +6,7 @@ import os
 from fastapi.responses import PlainTextResponse
 from fastapi import APIRouter, Query
 
-from ..core import utils
+from .. import utils
 
 
 router = APIRouter()
