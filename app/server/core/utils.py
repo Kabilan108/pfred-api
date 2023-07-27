@@ -53,3 +53,14 @@ def read_file(filepath: str) -> str:
         return ""
 
 
+# public static void saveStringAsFile(String filePath, String contents)
+def save_file(filepath: str, contents: str) -> None:
+    """Save a file with contents"""
+
+    logger.warning("Saving file: %s", filepath)
+
+    try:
+        with open(filepath, "w", encoding="utf-8") as file:
+            file.write(contents)
+    except IOError as exc:
+        logger.error("Error saving file: %s", exc)
