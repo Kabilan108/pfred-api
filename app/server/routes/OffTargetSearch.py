@@ -13,6 +13,7 @@ router = APIRouter()
 logger = utils.get_logger()
 
 
+# TODO: Run siRNA Off Target Search as a background task
 @router.get(
     "/siRNA",
     response_description="Run siRNA Off Target Search",
@@ -58,6 +59,7 @@ async def run_sirna_search(
     return PlainTextResponse("siRNAOffTargetSearch.sh run failed", status_code=400)
 
 
+# TODO: Run ASO as a background task
 @router.get(
     "/ASO",
     response_description="Run ASO Off target search",
