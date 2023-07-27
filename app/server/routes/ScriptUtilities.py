@@ -17,7 +17,7 @@ logger = utils.get_logger()
 @router.get(
     "/Orthologs",
     response_description="Run get Orthologs",
-    response_class=PlainTextResponse
+    response_class=PlainTextResponse,
 )
 async def get_orthologs(
     ensembl_id: str = Query(
@@ -57,7 +57,7 @@ async def get_orthologs(
 @router.get(
     "/enumerate_first",
     response_description="Run enumerate",
-    response_class=PlainTextResponse
+    response_class=PlainTextResponse,
 )
 async def run_enumerate_first(
     secondary_transcript_ids: str = Query(
@@ -98,7 +98,7 @@ async def run_enumerate_first(
 @router.get(
     "/enumerate_second",
     response_description="Run enumerate",
-    response_class=PlainTextResponse
+    response_class=PlainTextResponse,
 )
 async def run_enumerate_second(
     run_name: str = Query(..., alias="RunDirectory", description="Run directory")
@@ -126,7 +126,7 @@ async def run_enumerate_second(
 @router.get(
     "/clean",
     response_description="Run clean run directory",
-    response_class=PlainTextResponse
+    response_class=PlainTextResponse,
 )
 async def run_clean_run_directory(
     run_name: str = Query(..., alias="RunDirectory", description="Run directory")
@@ -151,7 +151,7 @@ async def run_clean_run_directory(
 @router.get(
     "/appendToFile",
     response_description="Run append to file",
-    response_class=PlainTextResponse
+    response_class=PlainTextResponse,
 )
 async def run_append_to_file(
     filename: str = Query(..., alias="FileName", description="File name"),

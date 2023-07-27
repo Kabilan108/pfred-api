@@ -16,18 +16,12 @@ logger = utils.get_logger()
 @router.get(
     "/siRNA",
     response_description="Run siRNA Off Target Search",
-    response_class=PlainTextResponse
+    response_class=PlainTextResponse,
 )
 async def run_sirna_search(
-    species: str = Query(
-        ..., alias="Species", description="Species"
-    ),
-    run_name: str = Query(
-        ..., alias="RunDirectory", description="Run directory"
-    ),
-    ids: str = Query(
-        ..., alias="IDs", description="IDs"
-    ),
+    species: str = Query(..., alias="Species", description="Species"),
+    run_name: str = Query(..., alias="RunDirectory", description="Run directory"),
+    ids: str = Query(..., alias="IDs", description="IDs"),
     miss_matches: int = Query(
         ..., alias="missMatches", description="number of allowed mismatches"
     ),
@@ -54,7 +48,9 @@ async def run_sirna_search(
     if success:
         logger.info("siRNAOffTargetSearch.sh ran successfully")
         try:
-            result = utils.read_file(os.path.join(run_directory, "sirna_search_result.csv"))
+            result = utils.read_file(
+                os.path.join(run_directory, "sirna_search_result.csv")
+            )
             return result
         except Exception as exc:  # pylint: disable=broad-except
             return PlainTextResponse(f"Error reading file: {exc}", status_code=400)
@@ -65,18 +61,12 @@ async def run_sirna_search(
 @router.get(
     "/ASO",
     response_description="Run ASO Off target search",
-    response_class=PlainTextResponse
+    response_class=PlainTextResponse,
 )
 async def run_aso_search(
-    species: str = Query(
-        ..., alias="Species", description="Species"
-    ),
-    run_name: str = Query(
-        ..., alias="RunDirectory", description="Run directory"
-    ),
-    ids: str = Query(
-        ..., alias="IDs", description="IDs"
-    ),
+    species: str = Query(..., alias="Species", description="Species"),
+    run_name: str = Query(..., alias="RunDirectory", description="Run directory"),
+    ids: str = Query(..., alias="IDs", description="IDs"),
     miss_matches: int = Query(
         ..., alias="missMatches", description="number of allowed mismatches"
     ),
@@ -103,7 +93,9 @@ async def run_aso_search(
     if success:
         logger.info("siRNAOffTargetSearch.sh ran successfully")
         try:
-            result = utils.read_file(os.path.join(run_directory, "aso_search_result.csv"))
+            result = utils.read_file(
+                os.path.join(run_directory, "aso_search_result.csv")
+            )
             return result
         except Exception as exc:  # pylint: disable=broad-except
             return PlainTextResponse(f"Error reading file: {exc}", status_code=400)
@@ -114,7 +106,7 @@ async def run_aso_search(
 @router.get(
     "/Check",
     response_description="Run Check file existence",
-    response_class=PlainTextResponse
+    response_class=PlainTextResponse,
 )
 async def check_file(
     file: str = Query(..., alias="File", description="File"),
