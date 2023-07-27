@@ -1,20 +1,11 @@
 """ScriptUtilities API endpoints"""
 
 from typing import Any
-
-from fastapi import APIRouter, BackgroundTasks, Query
-from fastapi.responses import PlainTextResponse
-
 import os
-import aiofiles
 
-from ..models.ScriptUtilities import (
-    OrthologsParams,
-    EnumerateFirstParams,
-    EnumerateSecondRequest,
-    CleanRunDirParams,
-    AppendToFileResponse,
-)
+from fastapi.responses import PlainTextResponse
+from fastapi import APIRouter, Query
+
 from ..core import utils
 
 
@@ -25,21 +16,17 @@ logger = utils.get_logger()
 @router.get(
     "/Orthologs",
     response_description="Run get Orthologs",
-    response_class=PlainTextResponse
+    response_class=PlainTextResponse,
 )
 async def get_orthologs(
     ensembl_id: str = Query(
         ..., alias="EnsemblID", description="Ensembl ID of the gene"
     ),
-    run_name: str = Query(
-        ..., alias="RunDirectory", description="Run directory"
-    ),
+    run_name: str = Query(..., alias="RunDirectory", description="Run directory"),
     requested_species: str = Query(
         ..., alias="RequestedSpecies", description="Requested species"
     ),
-    species: str = Query(
-        ..., alias="Species", description="Species"
-    ),
+    species: str = Query(..., alias="Species", description="Species"),
 ) -> Any:
     """Run getOrthologs.sh script"""
 
@@ -68,21 +55,17 @@ async def get_orthologs(
 @router.get(
     "/enumerate_first",
     response_description="Run enumerate",
-    response_class=PlainTextResponse
+    response_class=PlainTextResponse,
 )
 async def run_enumerate_first(
     secondary_transcript_ids: str = Query(
         ..., alias="SecondaryTranscriptIDs", description="Secondary transcript IDs"
     ),
-    run_name: str = Query(
-        ..., alias="RunDirectory", description="Run directory"
-    ),
+    run_name: str = Query(..., alias="RunDirectory", description="Run directory"),
     primary_transcript_id: str = Query(
         ..., alias="PrimaryTranscriptID", description="Primary transcript ID"
     ),
-    oligo_len: int = Query(
-        ..., alias="OligoLen", description="Oligonucleotide length"
-    ),
+    oligo_len: int = Query(..., alias="OligoLen", description="Oligonucleotide length"),
 ):
     """Run Enumeration.sh script"""
 
@@ -91,7 +74,9 @@ async def run_enumerate_first(
 
     #! run_directory must point to 'scripts/'
     # construct command
-    cmd = f"Enumeration.sh {secondary_transcript_ids} {primary_transcript_id} {oligo_len}"
+    cmd = (
+        f"Enumeration.sh {secondary_transcript_ids} {primary_transcript_id} {oligo_len}"
+    )
     success = utils.run_shell(cmd, run_directory)
 
     if success:
@@ -111,12 +96,10 @@ async def run_enumerate_first(
 @router.get(
     "/enumerate_second",
     response_description="Run enumerate",
-    response_class=PlainTextResponse
+    response_class=PlainTextResponse,
 )
 async def run_enumerate_second(
-    run_name: str = Query(
-        ..., alias="RunDirectory", description="Run directory"
-    )
+    run_name: str = Query(..., alias="RunDirectory", description="Run directory")
 ):
     """Collect data from sequence.fa after running Enumeration.sh"""
 
@@ -128,7 +111,9 @@ async def run_enumerate_second(
 
     try:
         if os.path.getsize(seqfile) == 0:
-            return PlainTextResponse("Sequence file is empty. Run /enumerate_first first.", status_code=400)
+            return PlainTextResponse(
+                "Sequence file is empty. Run /enumerate_first first.", status_code=400
+            )
         else:
             result = utils.read_file(seqfile)
             return result
@@ -139,12 +124,10 @@ async def run_enumerate_second(
 @router.get(
     "/clean",
     response_description="Run clean run directory",
-    response_class=PlainTextResponse
+    response_class=PlainTextResponse,
 )
 async def run_clean_run_directory(
-    run_name: str = Query(
-        ..., alias="RunDirectory", description="Run directory"
-    )
+    run_name: str = Query(..., alias="RunDirectory", description="Run directory")
 ):
     """Delete a run directory"""
 
@@ -156,7 +139,9 @@ async def run_clean_run_directory(
         if success:
             return "Run directory removed successfully"
     except Exception as exc:  # pylint: disable=broad-except
-        return PlainTextResponse(f"Error removing run directory: {exc}", status_code=400)
+        return PlainTextResponse(
+            f"Error removing run directory: {exc}", status_code=400
+        )
 
     return PlainTextResponse("Error removing run directory", status_code=400)
 
@@ -164,18 +149,12 @@ async def run_clean_run_directory(
 @router.get(
     "/appendToFile",
     response_description="Run append to file",
-    response_class=PlainTextResponse
+    response_class=PlainTextResponse,
 )
 async def run_append_to_file(
-    filename: str = Query(
-        ..., alias="FileName", description="File name"
-    ),
-    text: str = Query(
-        ..., alias="Text", description="Text to append"
-    ),
-    run_name: str = Query(
-        ..., alias="RunDirectory", description="Run directory"
-    ),
+    filename: str = Query(..., alias="FileName", description="File name"),
+    text: str = Query(..., alias="Text", description="Text to append"),
+    run_name: str = Query(..., alias="RunDirectory", description="Run directory"),
 ):
     """Append to file"""
 
