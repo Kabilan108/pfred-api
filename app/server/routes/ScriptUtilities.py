@@ -10,7 +10,7 @@ async def run_get_orthologs(
     ensembl_id: str = Query(..., alias="EnsemblID"),
     run_directory: str = Query(..., alias="RunDirectory"),
     requested_species: str = Query(..., alias="RequestedSpecies"),
-    species: str = Query(..., alias="Species")
+    species: str = Query(..., alias="Species"),
 ):
     """Run get Orthologs"""
     try:
@@ -44,9 +44,7 @@ async def run_enumerate_first(
 
 
 @router.get("/enumerate_second", response_description="Run enumerate")
-async def run_enumerate_second(
-    run_directory: str = Query(..., alias="RunDirectory")
-):
+async def run_enumerate_second(run_directory: str = Query(..., alias="RunDirectory")):
     """Run enumerate"""
     try:
         # TODO: Run enumerate here
@@ -79,7 +77,7 @@ async def run_clean_run_directory(
 async def run_append_to_file(
     filename: str = Query(..., alias="FileName"),
     text: str = Query(..., alias="Text"),
-    run_directory: str = Query(..., alias="RunDirectory")
+    run_directory: str = Query(..., alias="RunDirectory"),
 ):
     """Run append to file"""
     try:

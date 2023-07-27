@@ -10,7 +10,7 @@ async def run_aso_search(
     species: str = Query(..., alias="Species"),
     run_directory: str = Query(..., alias="RunDirectory"),
     ids: str = Query(..., alias="IDs"),
-    missmatch: int = Query(..., alias="missMatches")
+    missmatch: int = Query(..., alias="missMatches"),
 ):
     """Run ASO Off Target Search"""
     try:
@@ -22,12 +22,12 @@ async def run_aso_search(
         raise HTTPException(
             status_code=400, detail="Error occurred in running ASO Off Target Search"
         ) from exc
-    
+
 
 @router.get("/Check", response_description="Run Check file existence")
 async def check_file(
     file: str = Query(..., alias="File"),
-    run_directory: str = Query(..., alias="RunDirectory")
+    run_directory: str = Query(..., alias="RunDirectory"),
 ):
     """Run Check file existence"""
     try:
@@ -46,7 +46,7 @@ async def run_sirna_search(
     species: str = Query(..., alias="Species"),
     run_directory: str = Query(..., alias="RunDirectory"),
     ids: str = Query(..., alias="IDs"),
-    missmatch: int = Query(..., alias="missMatches")
+    missmatch: int = Query(..., alias="missMatches"),
 ):
     """Run siRNA Off Target Search"""
     try:

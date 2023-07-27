@@ -10,7 +10,11 @@ from ..models.Info import VersionResponse
 router = APIRouter()
 
 
-@router.get("/Version", response_description="Fetch service version", response_model=VersionResponse)
+@router.get(
+    "/Version",
+    response_description="Fetch service version",
+    response_model=VersionResponse,
+)
 async def get_version() -> Any:
     """Fetch service version"""
     try:
