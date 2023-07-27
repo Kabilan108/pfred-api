@@ -64,3 +64,18 @@ def save_file(filepath: str, contents: str) -> None:
             file.write(contents)
     except IOError as exc:
         logger.error("Error saving file: %s", exc)
+
+
+# public static boolean copyFile(String filePath, String targetDirectory)
+def copyfile(filepath: str, target_dir: str) -> bool:
+    """Copy a file to a directory"""
+
+    logger.warning("Copying file: %s to %s", filepath, target_dir)
+
+    try:
+        subprocess.run(f"cp {filepath} {target_dir}", shell=True, check=True)
+    except subprocess.CalledProcessError as exc:
+        logger.error("Error copying file: %s", exc)
+        return False
+
+    return True
