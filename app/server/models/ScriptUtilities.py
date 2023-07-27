@@ -3,8 +3,8 @@
 from pydantic import BaseModel
 
 
-class Orthologs(BaseModel):
-    """Orthologs model"""
+class OrthologsParams(BaseModel):
+    """Parameters for get Orthologs"""
 
     ensembl_id: str
     run_directory: str
@@ -12,8 +12,8 @@ class Orthologs(BaseModel):
     species: str
 
 
-class EnumerateFirstRequest(BaseModel):
-    """Enumerate First Response"""
+class EnumerateFirstParams(BaseModel):
+    """Parameters for enumerate"""
 
     secondary_transcript_ids: str
     run_directory: str
@@ -22,13 +22,13 @@ class EnumerateFirstRequest(BaseModel):
 
 
 class EnumerateSecondRequest(BaseModel):
-    """Enumerate Second Response"""
+    """Parameters for enumerate"""
 
     run_directory: str
 
 
 class AppendToFileResponse(BaseModel):
-    """Append to File Response"""
+    """Response for append to file"""
 
     filename: str
     text: str
