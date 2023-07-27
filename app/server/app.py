@@ -4,10 +4,7 @@ API entry point
 
 from fastapi import FastAPI
 
-from .routes.ActivityModel import router as ActivityModelRouter
-from .routes.Info import router as InfoRouter
-from .routes.OffTargetSearch import router as OffTargetSearchRouter
-from .routes.ScriptUtilities import router as ScriptUtilitiesRouter
+from .routes import ActivityModel, Info, OffTargetSearch, ScriptUtilities
 from . import __version__
 
 
@@ -19,7 +16,23 @@ app = FastAPI(
 )
 
 # include routers
-app.include_router(ActivityModelRouter, tags=["ActivityModel"], prefix="/ActivityModel")
-app.include_router(InfoRouter, tags=["Info"], prefix="/Info")
-app.include_router(OffTargetSearchRouter, tags=["OffTargetSearch"], prefix="/OffTargetSearch")
-app.include_router(ScriptUtilitiesRouter, tags=["ScriptUtilities"], prefix="/ScriptUtilities")
+app.include_router(
+    ActivityModel.router,
+    tags=["ActivityModel"],
+    prefix="/ActivityModel"
+)
+app.include_router(
+    Info.router,
+    tags=["Info"],
+    prefix="/Info"
+)
+app.include_router(
+    OffTargetSearch.router,
+    tags=["OffTargetSearch"],
+    prefix="/OffTargetSearch"
+)
+app.include_router(
+    ScriptUtilities.router,
+    tags=["ScriptUtilities"],
+    prefix="/ScriptUtilities"
+)
