@@ -42,46 +42,69 @@ async def get_orthologs(
     ),
 ) -> Any:
     """Run getOrthologs.sh script"""
-    try:
-        # create run directory
-        run_directory = utils.create_run_dir(run_name)
 
-        #! run_directory must point to 'scripts/'
-        # construct command
-        cmd = f"getOrthologs.sh {ensembl_id} {species} {requested_species}"
-        success = utils.run_shell(cmd, run_directory)
+    # create run directory
+    run_directory = utils.create_run_dir(run_name)
 
-        if success:
-            logger.info("getOrthologs.sh ran successfully")
-            output = os.path.join(run_directory, "seq_annotation.csv")
+    #! run_directory must point to 'scripts/'
+    # construct command
+    cmd = f"getOrthologs.sh {ensembl_id} {species} {requested_species}"
+    success = utils.run_shell(cmd, run_directory)
 
-            try:
-                result = utils.read_file(output)
-                return result
-            except Exception as exc:  # pylint: disable=broad-except
-                return PlainTextResponse(f"Error reading file: {exc}", status_code=400)
+    if success:
+        logger.info("getOrthologs.sh ran successfully")
+        output = os.path.join(run_directory, "seq_annotation.csv")
 
-    except Exception as exc:  # pylint: disable=broad-except
-        return PlainTextResponse(f"getOrthologs.sh run failed: {exc}", status_code=400)
+        try:
+            result = utils.read_file(output)
+            return result
+        except Exception as exc:  # pylint: disable=broad-except
+            return PlainTextResponse(f"Error reading file: {exc}", status_code=400)
+    else:
+        logger.error("getOrthologs.sh run failed")
+        return PlainTextResponse("getOrthologs.sh run failed", status_code=400)
 
 
-@router.get("/enumerate_first", response_description="Run enumerate")
+@router.get(
+    "/enumerate_first",
+    response_description="Run enumerate"
+)
 async def run_enumerate_first(
-    secondary_transcript_ids: str = Query(..., alias="SecondaryTranscriptIDs"),
-    run_directory: str = Query(..., alias="RunDirectory"),
-    primary_transcript_id: str = Query(..., alias="PrimaryTranscriptID"),
-    oligo_len: int = Query(..., alias="OligoLen"),
+    secondary_transcript_ids: str = Query(
+        ..., alias="SecondaryTranscriptIDs", description="Secondary transcript IDs"
+    ),
+    run_name: str = Query(
+        ..., alias="RunDirectory", description="Run directory"
+    ),
+    primary_transcript_id: str = Query(
+        ..., alias="PrimaryTranscriptID", description="Primary transcript ID"
+    ),
+    oligo_len: int = Query(
+        ..., alias="OligoLen", description="Oligonucleotide length"
+    ),
 ):
-    """Run enumerate"""
-    try:
-        # TODO: Run enumerate here
-        # Use secondary_transcript_ids, run_directory, primary_transcript_id, and oligo_len in the model
+    """Run Enumeration.sh script"""
 
-        return {"message": "Run enumerate successfully"}
-    except Exception as exc:
-        raise HTTPException(
-            status_code=400, detail="Error occurred in running enumerate"
-        ) from exc
+    # create run directory
+    run_directory = utils.create_run_dir(run_name)
+
+    #! run_directory must point to 'scripts/'
+    # construct command
+    cmd = f"Enumeration.sh {secondary_transcript_ids} {primary_transcript_id} {oligo_len}"
+    success = utils.run_shell(cmd, run_directory)
+
+    if success:
+        logger.info("Enumeration.sh ran successfully")
+        output = os.path.join(run_directory, "enumeration_result.csv")
+
+        try:
+            result = utils.read_file(output)
+            return result
+        except Exception as exc:  # pylint: disable=broad-except
+            return PlainTextResponse(f"Error reading file: {exc}", status_code=400)
+    else:
+        logger.error("Enumeration.sh run failed")
+        return PlainTextResponse("Enumeration.sh run failed", status_code=400)
 
 
 @router.get("/enumerate_second", response_description="Run enumerate")
