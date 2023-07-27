@@ -1,7 +1,20 @@
 """ScriptUtilities API endpoints"""
 
-from fastapi import APIRouter, HTTPException, Query
+from typing import Any
 
+from fastapi import APIRouter, HTTPException, Query
+from fastapi.responses import PlainTextResponse
+
+import os
+import aiofiles
+
+from ..models.ScriptUtilities import (
+    OrthologsParams,
+    EnumerateFirstParams,
+    EnumerateSecondRequest,
+    CleanRunDirParams,
+    AppendToFileResponse,
+)
 from ..core import utils
 
 
@@ -9,23 +22,47 @@ router = APIRouter()
 logger = utils.get_logger()
 
 
-@router.get("/Orthologs", response_description="Run get Orthologs")
-async def run_get_orthologs(
-    ensembl_id: str = Query(..., alias="EnsemblID"),
-    run_directory: str = Query(..., alias="RunDirectory"),
-    requested_species: str = Query(..., alias="RequestedSpecies"),
-    species: str = Query(..., alias="Species"),
-):
-    """Run get Orthologs"""
+@router.get(
+    "/Orthologs",
+    response_description="Run get Orthologs",
+    response_class=PlainTextResponse,
+)
+async def get_orthologs(
+    ensembl_id: str = Query(
+        ..., alias="EnsemblID", description="Ensembl ID of the gene"
+    ),
+    run_name: str = Query(
+        ..., alias="RunDirectory", description="Run directory"
+    ),
+    requested_species: str = Query(
+        ..., alias="RequestedSpecies", description="Requested species"
+    ),
+    species: str = Query(
+        ..., alias="Species", description="Species"
+    ),
+) -> Any:
+    """Run getOrthologs.sh script"""
     try:
-        # TODO: Run the get Orthologs here
-        # Use ensembl_id, run_directory, requested_species, and species in the model
+        # create run directory
+        run_directory = utils.create_run_dir(run_name)
 
-        return {"message": "Run get Orthologs successfully"}
-    except Exception as exc:
-        raise HTTPException(
-            status_code=400, detail="Error occurred in running get Orthologs"
-        ) from exc
+        #! run_directory must point to 'scripts/'
+        # construct command
+        cmd = f"getOrthologs.sh {ensembl_id} {species} {requested_species}"
+        success = utils.run_shell(cmd, run_directory)
+
+        if success:
+            logger.info("getOrthologs.sh ran successfully")
+            output = os.path.join(run_directory, "seq_annotations.csv")
+
+            try:
+                result = utils.read_file(output)
+                return result
+            except Exception as exc:  # pylint: disable=broad-except
+                return PlainTextResponse(f"Error reading file: {exc}", status_code=400)
+
+    except Exception as exc:  # pylint: disable=broad-except
+        return PlainTextResponse(f"getOrthologs.sh run failed: {exc}", status_code=400)
 
 
 @router.get("/enumerate_first", response_description="Run enumerate")
