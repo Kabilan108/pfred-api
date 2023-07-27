@@ -82,11 +82,13 @@ def copyfile(filepath: str, target_dir: str) -> bool:
 
 
 # public static String prepareRunDir(String runName)
-def prepare_run_dir(run_name: str) -> str:
+def create_run_dir(run_name: str) -> str:
     """Prepare the run directory"""
-    
+
     logger.warning("Preparing run directory: %s", run_name)
 
     path = Path(RUNS_DIR) / run_name
     path.mkdir(parents=True, exist_ok=True)
     return str(path)
+
+
