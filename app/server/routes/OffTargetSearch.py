@@ -2,7 +2,11 @@
 
 from fastapi import APIRouter, HTTPException, Query
 
+from ..core import utils
+
+
 router = APIRouter()
+logger = utils.get_logger()
 
 
 @router.get("/ASO", response_description="Run ASO Off Target Search")

@@ -2,7 +2,11 @@
 
 from fastapi import APIRouter, HTTPException, Query
 
+from ..core import utils
+
+
 router = APIRouter()
+logger = utils.get_logger()
 
 
 @router.get("/Orthologs", response_description="Run get Orthologs")
