@@ -15,12 +15,10 @@ RUNS_DIR = Path(os.getenv("RUN_DIR", "/runs"))
 SCRIPTS_DIR = Path(os.getenv("SCRIPTS_DIR", "/scripts"))
 
 
+# setup logging
 def get_logger() -> logging.Logger:
     """Get logger"""
     return logging.getLogger("pfred")
-
-
-# create logger
 logger = logging.getLogger("pfred")
 
 
@@ -92,3 +90,27 @@ def create_run_dir(run_name: str) -> str:
     return str(path)
 
 
+# public static boolean removeDir(String dirPath)
+def remove_dir(dir_path: str) -> bool:
+    """Remove a directory"""
+
+    logger.warning("Removing directory: %s", dir_path)
+
+    try:
+        subprocess.run(f"rm -rf {dir_path}", shell=True, check=True)
+    except subprocess.CalledProcessError as exc:
+        logger.error("Error removing directory: %s", exc)
+        return False
+
+    return True
+
+# public static String getRunDir()
+def get_runs_dir() -> str:
+    """Get the runs directory"""
+    return str(RUNS_DIR)
+
+
+# public static String getScriptsDir()
+def get_scripts_dir() -> str:
+    """Get the scripts directory"""
+    return str(SCRIPTS_DIR)
