@@ -1,9 +1,10 @@
 [tool.poetry]
-name = "ensemblapi"
+name = "pfred"
 version = "0.1.0"
 description = ""
-authors = ["Tony Okeke <tonykabilanokeke@gmail.com>"]
 readme = "README.md"
+authors = ["Tony Okeke <tonykabilanokeke@gmail.com>"]
+packages = [{ include = "pfred" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"
